@@ -228,9 +228,40 @@ def depthFirstSearch(problem):
     # util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
+
+    def backtrack(node):
+        path = []
+        while backtrack_dict[node] != "root":
+            path.append(node[1])
+            node = backtrack_dict[node]
+        path = path[::-1]
+        print path
+        return path
+    frontier = util.Queue()
+    initialState = (problem.getStartState() ,"none",0)
+    backtrack_dict = {initialState:"root"}
+    frontier.push(initialState)
+    if problem.isGoalState(initialState[0]): 
+        return []
+    while True: 
+        if frontier.isEmpty():
+            return False
+        node = frontier.pop()
+        for child in problem.getSuccessors(node[0]):
+            if child not in frontier.list and child not in backtrack_dict.keys():
+                backtrack_dict[child] = node
+                if problem.isGoalState(child[0]):
+                    return backtrack(child)
+                frontier.push(child)
+
+
+    
+    
+
+
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""

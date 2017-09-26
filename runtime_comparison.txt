@@ -1,0 +1,15 @@
+//BFS-Large//
+Path found with total cost of 210 in 0.3 seconds
+Search nodes expanded: 1228
+
+//DFS-Large//
+Path found with total cost of 210 in 0.2 seconds
+Search nodes expanded: 646
+
+//BFS-Medium//
+Path found with total cost of 68 in 0.1 seconds
+Search nodes expanded: 540
+
+//DFS-Medium//
+Path found with total cost of 246 in 0.1 seconds
+Search nodes expanded: 273
