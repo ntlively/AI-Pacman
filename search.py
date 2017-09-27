@@ -240,30 +240,36 @@ def uniformCostSearch(problem):
     frontier2 = {}
     initialState = (problem.getStartState() ,"none",0)
     backtrack_dict = {initialState[0]:"root"}
-    visited_dict = {initialState[0]:"root"}
+    visited_dict = {}
     frontier.update(initialState,0)
     frontier2[initialState[0]] = 0
+    costToGetHere = {}
+    costToGetHere[initialState[0]] = 0
 
     while True: 
         if frontier.isEmpty():
             return False
         node = frontier.pop()
-        del frontier2[node[0]]
+        if node[0] in frontier2.keys():
+            del frontier2[node[0]]
         if problem.isGoalState(node[0]):
             return backtrack(node)
         visited_dict[node[0]] = True
         for child in problem.getSuccessors(node[0]):
+            nextCost = costToGetHere[node[0]] + child[2]
             if child[0] not in visited_dict.keys() and child[0] not in frontier2.keys():
+                costToGetHere[child[0]] = nextCost
                 backtrack_dict[child[0]] = node
-                frontier.push(child,child[2])
-                frontier2[child[0]] = child[2]
+                frontier.push(child,costToGetHere[child[0]])
+                frontier2[child[0]] = costToGetHere[child[0]]
             elif child[0] in frontier2.keys() and frontier2[child[0]]>child[2]:
+                costToGetHere[child[0]] = nextCost
                 backtrack_dict[child[0]] = node
-                frontier.update(child,child[2])
-                frontier2[child[0]] = child[2]
+                frontier.update(child,costToGetHere[child[0]])
+                frontier2[child[0]] = costToGetHere[child[0]]
 
 
-
+    
     # while True: 
     #     if frontier.isEmpty():
     #         return False
@@ -317,39 +323,91 @@ def nullHeuristic(state, problem=None):
     return 0
 
 def aStarSearch(problem, heuristic=nullHeuristic):
+
     def backtrack(node):
         path = []
-        while backtrack_dict[node] != "root":
+        while backtrack_dict[node[0]] != "root":
             path.append(node[1])
-            node = backtrack_dict[node]
+            node = backtrack_dict[node[0]]
         path = path[::-1]
         # print path
         return path
-
     frontier = util.PriorityQueue()
+    frontier2 = {}
     initialState = (problem.getStartState() ,"none",0)
-    backtrack_dict = {initialState:"root"}
+    backtrack_dict = {initialState[0]:"root"}
+    visited_dict = {}
     frontier.update(initialState,0)
+    frontier2[initialState[0]] = heuristic(initialState[0],problem)
     costToGetHere = {}
+    costToGetHere[initialState[0]] = heuristic(initialState[0],problem)
 
-
-
-    if problem.isGoalState(initialState[0]): 
-        return []
     while True: 
         if frontier.isEmpty():
             return False
         node = frontier.pop()
-        costToGetHere[node] = node[2]
+        if node[0] in frontier2.keys():
+            del frontier2[node[0]]
+        if problem.isGoalState(node[0]):
+            return backtrack(node)
+        visited_dict[node[0]] = True
         for child in problem.getSuccessors(node[0]):
-            nextCost = costToGetHere[node] + child[2]
-            if child not in costToGetHere or nextCost < costToGetHere[child]:
-                costToGetHere[child] = nextCost
+            nextCost = costToGetHere[node[0]] + child[2]
+            # if child[0] not in visited_dict.keys() and child[0] not in frontier2.keys():
+            #     costToGetHere[child[0]] = nextCost
+            if child[0] not in costToGetHere.keys() or nextCost < costToGetHere[child[0]]:
+                costToGetHere[child[0]] = nextCost
                 priority = nextCost + heuristic(child[0],problem)
-                frontier.update(child, priority)
-                backtrack_dict[child] = node
-                if problem.isGoalState(child[0]):
-                    return backtrack(child)
+                backtrack_dict[child[0]] = node
+                frontier.push(child,priority)
+                frontier2[child[0]] = priority
+            # elif child[0] in frontier2.keys() and frontier2[child[0]]>child[2]:
+            #     costToGetHere[child[0]] = nextCost
+            #     priority = nextCost + heuristic(child[0],problem)
+            #     backtrack_dict[child[0]] = node
+            #     frontier.update(child,priority)
+            #     frontier2[child[0]] = priority
+
+
+
+    # def backtrack(node):
+    #     path = []
+    #     while backtrack_dict[node[0]] != "root":
+    #         path.append(node[1])
+    #         node = backtrack_dict[node[0]]
+    #     path = path[::-1]
+    #     # print path
+    #     return path
+
+    # frontier = util.PriorityQueue()
+    # frontier2 = {}
+    # initialState = (problem.getStartState() ,"none",0)
+    # backtrack_dict = {initialState[0]:"root"}
+    # frontier.update(initialState,0)
+    # frontier2[initialState[0]] = 0
+    # costToGetHere = {}
+    # costToGetHere[initialState[0]] = 0
+
+
+    # if problem.isGoalState(initialState[0]): 
+    #     return []
+    # while True: 
+    #     if frontier.isEmpty():
+    #         return False
+    #     node = frontier.pop()
+    #     if node[0] in frontier2.keys():
+    #         del frontier2[node[0]]
+    #     costToGetHere[node[0]] = node[2]
+    #     for child in problem.getSuccessors(node[0]):
+    #         nextCost = costToGetHere[node[0]] + child[2]
+    #         if child[0] not in costToGetHere.keys() or nextCost < costToGetHere[child[0]]:
+    #             costToGetHere[child[0]] = nextCost
+    #             priority = nextCost + heuristic(child[0],problem)
+    #             frontier.update(child, priority)
+    #             frontier2[child[0]] = priority
+    #             backtrack_dict[child[0]] = node
+    #             if problem.isGoalState(child[0]):
+    #                 return backtrack(child)
 
 
 
