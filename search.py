@@ -87,138 +87,97 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
+
+
+
+
+
+    def backtrack(node):
+        path = []
+        while backtrack_dict[node] != "root":
+            path.append(node[1])
+            node = backtrack_dict[node]
+        path = path[::-1]
+        # print path
+        return path
+    frontier = util.Stack()
+    initialState = (problem.getStartState() ,"none",0)
+    backtrack_dict = {initialState:"root"}
+    visited_dict = {initialState[0]:"root"}
+    frontier.push(initialState)
+    # print "frontier list",frontier.list
+    if problem.isGoalState(initialState[0]): 
+        return []
+    while True: 
+        if frontier.isEmpty():
+            return False
+        node = frontier.pop()
+        if problem.isGoalState(node[0]):
+            return backtrack(node)
+        visited_dict[node[0]] = True
+        for child in problem.getSuccessors(node[0]):
+            if  child[0] not in visited_dict.keys():
+                backtrack_dict[child] = node
+                frontier.push(child)
+                # print child
+                # print "frontier list",frontier.list
+
+
+
     # global answer
     # visited = util.Stack()
 
-    def traversePath(current, direction, visited, path):
-        if problem.isGoalState(current):
-            visited.push(current)
-            if direction!= "start":
-                path.append(direction)
+    # def traversePath(current, direction, visited, path):
+    #     if problem.isGoalState(current):
+    #         visited.push(current)
+    #         if direction!= "start":
+    #             path.append(direction)
             
-            print "The final answer that shall be returned", path
-            global answer
-            answer =  path[:]
-        else:
-            # print "recursion works"
-            visited.push(current)
-            if direction!= "start":
-                path.append(direction)
-            for node in problem.getSuccessors(current):
-                for trace in visited.list:
-                    addOptions = False
-                    if (node[0][0] == trace[0] and node[0][1] == trace[1]) == False:
-                        # print "never visited, add to options"
-                        addOptions = True
-                    else:
-                        # print "visited before, do not add to options"
-                        addOptions = False
-                        break
-
-                if addOptions == True:
-                    copy = []
-                    copy = path[:]
-                    print path
-                    traversePath(node[0],node[1], visited, copy)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # visited = util.Stack()
-    # options = util.Stack()
-    # pathOptions = util.Stack()
-    # path = util.Stack()
-    currentState = problem.getStartState()
-
-    traversePath(currentState,"start", util.Stack(),[])
-
-    print "The actual answer recieved",answer
-
-    return answer
-
-    # while problem.isGoalState(currentState) == False:
-    #     for node in problem.getSuccessors(currentState):
-    #         traversePath()
-
-        
-
-
-    
-
-
-
-
-    # if problem.isGoalState(problem.getStartState()):
-    #     print "Start state is the goal state"
-    #     return []
-    # else:
-    #     visited.push(problem.getStartState())
-    #     print "Pushed the start state"
-
-    #     while problem.isGoalState(currentState) == False:
-    #         # print "lets while loop:",currentState
-    #         # print problem.getSuccessors(currentState)
-    #         count = 0
-    #         path = pathOptions.list[-1]
-    #         for node in problem.getSuccessors(currentState):
-    #             # print "option:", node
-                
-    #                 for trace in visited.list:
-    #                     # print "check if visited", trace
-    #                     # print node[0][0]
-    #                     # print trace[0]
-    #                     # print node[0][1]
-    #                     # print trace[1]
+    #         # print "The final answer that shall be returned", path
+    #         global answer
+    #         answer =  path[:]
+    #     else:
+    #         # print "recursion works"
+    #         visited.push(current)
+    #         if direction!= "start":
+    #             path.append(direction)
+    #         for node in problem.getSuccessors(current):
+    #             for trace in visited.list:
+    #                 addOptions = False
+    #                 if (node[0][0] == trace[0] and node[0][1] == trace[1]) == False:
+    #                     # print "never visited, add to options",node
+    #                     addOptions = True
+    #                 else:
+    #                     # print "visited before, do not add to options",node
     #                     addOptions = False
-    #                     if (node[0][0] == trace[0] and node[0][1] == trace[1]) == False:
-    #                         # print "never visited, add to options"
-    #                         addOptions = True
-    #                     else:
-    #                         # print "visited before, do not add to options"
-    #                         addOptions = False
-    #                         break
-                
+    #                     break
 
-    #                 if addOptions == True:
-    #                     # print "Final visited check: Added Node"
-    #                     if count != 0:
-    #                         pathOptions.push(path)
-    #                     else:
-    #                         count = count + 1
-    #                         options.push(node)
-                        
-                
-                    
+    #             if addOptions == True:
+    #                 copy = []
+    #                 copy = path[:]
+    #                 print path,":", node,":",visited.list
+    #                 traversePath(node[0],node[1], visited, copy)
 
-    #         pathState = options.pop()
-    #         currentState = pathState[0]
-    #         print "\nmoved to new state:", currentState,":",pathState[1]
-            
-    #         if problem.isGoalState(currentState):
-    #             print "Found the goal state"
-    #             path.push(pathState[1])
-    #             visited.push(currentState)
-    #             # path = []
-    #             # for state in visited.list:
-    #             #     path.append(state[1])
 
-    #             print path.list  
-    #             return path.list
-    #         else:
-    #             print "Did not find goal state"
-    #             path.push(pathState[1])
-    #             visited.push(currentState)
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # currentState = problem.getStartState()
+
+    # traversePath(currentState,"start", util.Stack(),[])
+
+    # return answer
+
             
 
 
@@ -235,25 +194,29 @@ def breadthFirstSearch(problem):
             path.append(node[1])
             node = backtrack_dict[node]
         path = path[::-1]
-        print path
+        # print path
         return path
     frontier = util.Queue()
     initialState = (problem.getStartState() ,"none",0)
     backtrack_dict = {initialState:"root"}
+    visited_dict = {initialState[0]:"root"}
     frontier.push(initialState)
+    # print "frontier list",frontier.list
     if problem.isGoalState(initialState[0]): 
         return []
     while True: 
         if frontier.isEmpty():
             return False
         node = frontier.pop()
+        if problem.isGoalState(node[0]):
+            return backtrack(node)
         for child in problem.getSuccessors(node[0]):
-            if child not in frontier.list and child not in backtrack_dict.keys():
+            if child not in frontier.list and child[0] not in visited_dict.keys():
                 backtrack_dict[child] = node
-                if problem.isGoalState(child[0]):
-                    return backtrack(child)
+                visited_dict[child[0]] = node[0]
                 frontier.push(child)
-
+                # print "frontier list",frontier.list
+                
 
     
     
@@ -264,9 +227,87 @@ def breadthFirstSearch(problem):
     # util.raiseNotDefined()
 
 def uniformCostSearch(problem):
+
+    def backtrack(node):
+        path = []
+        while backtrack_dict[node[0]] != "root":
+            path.append(node[1])
+            node = backtrack_dict[node[0]]
+        path = path[::-1]
+        # print path
+        return path
+    frontier = util.PriorityQueue()
+    frontier2 = {}
+    initialState = (problem.getStartState() ,"none",0)
+    backtrack_dict = {initialState[0]:"root"}
+    visited_dict = {initialState[0]:"root"}
+    frontier.update(initialState,0)
+    frontier2[initialState[0]] = 0
+
+    while True: 
+        if frontier.isEmpty():
+            return False
+        node = frontier.pop()
+        del frontier2[node[0]]
+        if problem.isGoalState(node[0]):
+            return backtrack(node)
+        visited_dict[node[0]] = True
+        for child in problem.getSuccessors(node[0]):
+            if child[0] not in visited_dict.keys() and child[0] not in frontier2.keys():
+                backtrack_dict[child[0]] = node
+                frontier.push(child,child[2])
+                frontier2[child[0]] = child[2]
+            elif child[0] in frontier2.keys() and frontier2[child[0]]>child[2]:
+                backtrack_dict[child[0]] = node
+                frontier.update(child,child[2])
+                frontier2[child[0]] = child[2]
+
+
+
+    # while True: 
+    #     if frontier.isEmpty():
+    #         return False
+    #     node = frontier.pop()
+    #     for child in problem.getSuccessors(node[0]):
+    #         if child not in frontier.heap and child[0] not in visited_dict.keys():
+    #             backtrack_dict[child] = node
+    #             visited_dict[child[0]] = node[0]
+    #             if problem.isGoalState(child[0]):
+    #                 return backtrack(child)
+    #             frontier.update(child,child[2])
+    #             print frontier.heap
+
+
+
+
+    #     def backtrack(node):
+    #     path = []
+    #     while backtrack_dict[node] != "root":
+    #         path.append(node[1])
+    #         node = backtrack_dict[node]
+    #     path = path[::-1]
+    #     print path
+    #     return path
+    # frontier = util.PriorityQueue()
+    # initialState = (problem.getStartState() ,"none",0)
+    # backtrack_dict = {initialState:"root"}
+    # frontier.update(initialState,0)
+
+    # while True: 
+    #     if frontier.isEmpty():
+    #         return False
+    #     node = frontier.pop()
+    #     if problem.isGoalState(node[0]): 
+    #         return backtrack(node)
+    #     backtrack_dict[node] = node
+    #     for child in problem.getSuccessors(node[0]):
+    #         if child not in frontier.list and child not in backtrack_dict.keys():
+    #             frontier.update(child,child[2])
+
+
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
@@ -276,9 +317,46 @@ def nullHeuristic(state, problem=None):
     return 0
 
 def aStarSearch(problem, heuristic=nullHeuristic):
+    def backtrack(node):
+        path = []
+        while backtrack_dict[node] != "root":
+            path.append(node[1])
+            node = backtrack_dict[node]
+        path = path[::-1]
+        # print path
+        return path
+
+    frontier = util.PriorityQueue()
+    initialState = (problem.getStartState() ,"none",0)
+    backtrack_dict = {initialState:"root"}
+    frontier.update(initialState,0)
+    costToGetHere = {}
+
+
+
+    if problem.isGoalState(initialState[0]): 
+        return []
+    while True: 
+        if frontier.isEmpty():
+            return False
+        node = frontier.pop()
+        costToGetHere[node] = node[2]
+        for child in problem.getSuccessors(node[0]):
+            nextCost = costToGetHere[node] + child[2]
+            if child not in costToGetHere or nextCost < costToGetHere[child]:
+                costToGetHere[child] = nextCost
+                priority = nextCost + heuristic(child[0],problem)
+                frontier.update(child, priority)
+                backtrack_dict[child] = node
+                if problem.isGoalState(child[0]):
+                    return backtrack(child)
+
+
+
+
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
 
 
 # Abbreviations
