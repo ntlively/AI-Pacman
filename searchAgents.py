@@ -368,18 +368,19 @@ def cornersHeuristic(state, problem):
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
+    walls = walls.asList()
+    # print state
     if state[0] in corners:
         return 0
 
     distanceGoal = []
+    disjoint = set(corners) ^ set(state[1])
 
 
+    for goal in disjoint:
+        distanceGoal.append(abs(state[0][0] - goal[0]) + abs(state[0][1] - goal[1]))
 
-    for goal in corners:
-        distanceGoal.append(( (state[0][0] - goal[0]) ** 10 + (state[0][1] - goal[1]) ** 10 ))
-
-    return min(distanceGoal)
+    return min(distanceGoal) 
 
     "*** YOUR CODE HERE ***"
     # return 0 # Default to trivial solution
@@ -477,10 +478,26 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    foodGrid = foodGrid.asList()
+    copyList = foodGrid.asList()
     check = util.PriorityQueue()
 
+
+    if state in copyList:
+        return 0
+
+    distanceGoal = []
+
+    print state
+    # disjoint = set(foodGrid) ^ set(state[1])
+    # if len(state[1]) == len(copyList):
+    #     return 0
+
+    # for goal in foodGrid:
+    #     distanceGoal.append(abs(state[0][0] - goal[0]) + abs(state[0][1] - goal[1]))
+
     return 1
+
+    # return 1
 
 
 class ClosestDotSearchAgent(SearchAgent):
