@@ -481,13 +481,42 @@ def foodHeuristic(state, problem):
     copyList = foodGrid.asList()
     check = util.PriorityQueue()
 
+    distanceGoal = []
+    visited = []
 
-    if state in copyList:
+    if state[0] in copyList:
+        visited.append(state[0])
+        return 0
+    if len(state[1].asList()) == 0:
         return 0
 
-    distanceGoal = []
 
-    print state
+    # print "~~~~~", len(state[1].asList())
+    # print "-----" , copyList
+
+    # disjoint = set(copyList) ^ set(state[1])
+    disjoint = [elem for elem in state[1].asList() if elem not in visited]
+
+    top = [elem for elem in disjoint if elem[1]>state[1].asList()[len(state[1].asList())/2][1]]
+    bottom = [elem for elem in disjoint if elem[1]<state[1].asList()[len(state[1].asList())/2][1]]
+
+    # print "~~~~~", top
+    # print "-----" , bottom
+
+    if len(top)>0:
+        for goal in top:
+            distanceGoal.append(((state[0][0] - goal[0])**10 + (state[0][1] - goal[1])**10)**0.1)
+    elif len(bottom)>0:
+        for goal in bottom:
+            distanceGoal.append(((state[0][0] - goal[0])**10 + (state[0][1] - goal[1])**10)**0.1)
+    else:
+        for goal in disjoint:
+            distanceGoal.append(((state[0][0] - goal[0])**10 + (state[0][1] - goal[1])**10)**0.1)
+
+    return min(distanceGoal) 
+    # return 1
+
+    # print state
     # disjoint = set(foodGrid) ^ set(state[1])
     # if len(state[1]) == len(copyList):
     #     return 0
@@ -495,7 +524,7 @@ def foodHeuristic(state, problem):
     # for goal in foodGrid:
     #     distanceGoal.append(abs(state[0][0] - goal[0]) + abs(state[0][1] - goal[1]))
 
-    return 1
+    # return 1
 
     # return 1
 

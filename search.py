@@ -337,6 +337,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     initialState = (problem.getStartState() ,"none",0)
     backtrack_dict = {initialState[0]:"root"}
     visited_dict = {}
+
     frontier.update(initialState,0)
     frontier2[initialState[0]] = heuristic(initialState[0],problem)
     costToGetHere = {}
@@ -348,19 +349,26 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         node = frontier.pop()
         if node[0] in frontier2.keys():
             del frontier2[node[0]]
+
+        visited_dict[node[0]] = True
+
         if problem.isGoalState(node[0]):
             return backtrack(node)
         visited_dict[node[0]] = True
         for child in problem.getSuccessors(node[0]):
-            nextCost = costToGetHere[node[0]] + child[2]
-            # if child[0] not in visited_dict.keys() and child[0] not in frontier2.keys():
-            #     costToGetHere[child[0]] = nextCost
-            if child[0] not in costToGetHere.keys() or nextCost < costToGetHere[child[0]]:
-                costToGetHere[child[0]] = nextCost
-                priority = nextCost + heuristic(child[0],problem)
-                backtrack_dict[child[0]] = node
-                frontier.push(child,priority)
-                frontier2[child[0]] = priority
+            if child[0] not in visited_dict.keys():
+                # print child[0]
+                nextCost = costToGetHere[node[0]] + child[2]
+                # if child[0] not in visited_dict.keys() and child[0] not in frontier2.keys():
+                #     costToGetHere[child[0]] = nextCost
+                if child[0] not in costToGetHere.keys() or nextCost < costToGetHere[child[0]]:
+                    costToGetHere[child[0]] = nextCost
+                    priority = nextCost + heuristic(child[0],problem)
+                    backtrack_dict[child[0]] = node
+                    frontier.push(child,priority)
+                    frontier2[child[0]] = priority
+
+                # print "\nskipped duplicate\n"
             # elif child[0] in frontier2.keys() and frontier2[child[0]]>child[2]:
             #     costToGetHere[child[0]] = nextCost
             #     priority = nextCost + heuristic(child[0],problem)
